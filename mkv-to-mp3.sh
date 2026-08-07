@@ -1,22 +1,32 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
+
+mostrar_ayuda() {
+    cat <<EOF
+Uso: $0 [--baja-calidad] archivo1 [archivo2 ...]
+Descripción: Convierte archivos MKV a MP3 extrayendo el audio.
+Opciones:
+  --baja-calidad    Reduce la calidad del MP3 para obtener archivos más ligeros.
+  --help            Muestra esta ayuda.
+EOF
+}
+
+# Procesar opciones
+for arg in "$@"; do
+    if [[ "$arg" == "--help" ]]; then
+        mostrar_ayuda
+        exit 0
+    fi
+done
 
 baja_calidad=false
-
 if [[ "$1" == "--baja-calidad" ]]; then
     baja_calidad=true
     shift
 fi
 
-if [[ $# -ne 1 ]]; then
-    echo "Uso: $0 archivo.mkv"
-    echo "Otro uso: $0 --baja-calidad archivo.mkv. Para que el archivo mp3 sea más ligero pero de menor calidad."
-    exit 1
-fi
-
-archivo="$1"
-
-if [[ ! -f "$archivo" ]]; then
-    echo "Error: el archivo no existe"
+if [[ $# -eq 0 ]]; then
+    echo "Error: no se especificaron archivos."
+    mostrar_ayuda
     exit 1
 fi
 
@@ -26,25 +36,37 @@ if ! command -v ffmpeg >/dev/null 2>&1; then
     exit 1
 fi
 
-salida="${archivo%.*}.mp3"
+error=0
 
-if $baja_calidad; then
-    calidad=7
-    echo "Modo: baja calidad"
-else
-    calidad=2
-    echo "Modo: calidad normal"
-fi
+for archivo in "$@"; do
+    if [[ ! -f "$archivo" ]]; then
+        echo "Error: el archivo '$archivo' no existe"
+        error=1
+        continue
+    fi
 
-echo "Convirtiendo:"
-echo "  Entrada: $archivo"
-echo "  Salida:  $salida"
+    salida="${archivo%.*}.mp3"
 
-ffmpeg -i "$archivo" -vn -codec:a libmp3lame -q:a "$calidad" "$salida"
+    if $baja_calidad; then
+        calidad=7
+        echo "Modo: baja calidad"
+    else
+        calidad=2
+        echo "Modo: calidad normal"
+    fi
 
-if [[ $? -eq 0 ]]; then
-    echo "Conversión completada."
-else
-    echo "Error durante la conversión."
-    exit 1
-fi
+    echo "Convirtiendo:"
+    echo "  Entrada: $archivo"
+    echo "  Salida:  $salida"
+
+    ffmpeg -i "$archivo" -vn -codec:a libmp3lame -q:a "$calidad" "$salida"
+
+    if [[ $? -eq 0 ]]; then
+        echo "Conversión completada correctamente."
+    else
+        echo "Error durante la conversión de '$archivo'."
+        error=1
+    fi
+done
+
+exit $error
