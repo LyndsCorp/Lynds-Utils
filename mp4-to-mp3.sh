@@ -9,7 +9,7 @@ fi
 
 if [[ $# -ne 1 ]]; then
     echo "Uso: $0 archivo.mp4"
-    echo "Otro uso: $0 --baja-calidad archivo.mkv. Para que el archivo mp3 sea más ligero pero de menor calidad."
+    echo "Otro uso: $0 --baja-calidad archivo.mp4. Para que el archivo mp3 sea más ligero pero de menor calidad."
     exit 1
 fi
 
