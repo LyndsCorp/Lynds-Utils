@@ -3,5 +3,6 @@
   "metarepo": "https://raw.githubusercontent.com/LyndsCorp/Lynds-Utils/METAREPO/METAREPO",
   "ai-bro": "https://raw.githubusercontent.com/LyndsCorp/Lynds-Utils/METAREPO/AI-Bro.json",
   "verify-packages": "https://raw.githubusercontent.com/LyndsCorp/Lynds-Utils/METAREPO/Verify-Packages.json",
-  "apt-random": "https://raw.githubusercontent.com/LyndsCorp/Lynds-Utils/METAREPO/APT-Random.json"
+  "apt-random": "https://raw.githubusercontent.com/LyndsCorp/Lynds-Utils/METAREPO/APT-Random.json",
+  "empaquetar-deb": "https://raw.githubusercontent.com/LyndsCorp/Lynds-Utils/METAREPO/Empaquetar-Deb.json"
 }
